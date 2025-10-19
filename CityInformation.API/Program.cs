@@ -53,6 +53,7 @@ builder.Services.AddTransient<IMailService, CloudMailService>();
 builder.Services.AddSingleton<CitiesDataStore>();
 builder.Services.AddDbContext<CityInfoContext>(dbContextOptions 
     => dbContextOptions.UseSqlite(builder.Configuration["ConnectionStrings:CityInfoDBConnectionString"]));
+builder.Services.AddScoped<ICityInfoRepository, CityInfoRepository>(); // Create once per request
 
 var app = builder.Build();
 
