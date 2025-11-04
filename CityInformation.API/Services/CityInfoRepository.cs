@@ -15,10 +15,12 @@ public class CityInfoRepository(CityInfoContext dbContext) : ICityInfoRepository
     {
         if (includePoi)
         {
-            return await dbContext.Cities
-                .Include(c => c.PointsOfInterests)
+            var result = await dbContext.Cities
+                .Include(c => c.PointsOfInterest)
                 .Where(c => c.Id == cityId)
                 .FirstOrDefaultAsync();
+
+            return result;
         }
         return await dbContext.Cities.Where(c => c.Id == cityId).FirstOrDefaultAsync();
     }
@@ -35,5 +37,26 @@ public class CityInfoRepository(CityInfoContext dbContext) : ICityInfoRepository
         return await dbContext.PointsOfInterest
             .Where(p => p.Id == pointOfInterestId && p.CityId == cityId)
             .FirstOrDefaultAsync();
+    }
+
+    public async Task<bool> CityExistsAsync(int cityId)
+    {
+        return await dbContext.Cities.AnyAsync(c => c.Id == cityId);
+    }
+
+    public Task AddPointOfInterestAsync(int cityId, PointOfInterest pointOfInterest)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<bool> SaveChangesAsync()
+    {
+        return await dbContext.SaveChangesAsync() >= 0;
+    }
+
+    public async Task AddPointOfInterestForCityAsync(int cityId, PointOfInterest pointOfInterest)
+    {
+        var city = await GetCityAsync(cityId, false);
+        city?.PointsOfInterest.Add(pointOfInterest);
     }
 }

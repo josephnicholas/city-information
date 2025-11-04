@@ -16,6 +16,7 @@ public class City(string name) {
     [MaxLength(200)]
     public string? Description { get; set; }
     
-    public ICollection<PointOfInterest> PointsOfInterests { get; set; } 
-        = new List<PointOfInterest>();
+    public ICollection<PointOfInterest> PointsOfInterest { get; set; } = new List<PointOfInterest>();
+    
+    public int NumberOfPointsOfInterest => PointsOfInterest.Count;
 }

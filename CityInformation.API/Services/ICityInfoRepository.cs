@@ -8,4 +8,8 @@ public interface ICityInfoRepository
     public Task<City?> GetCityAsync(int cityId, bool includePoi);
     public Task<IEnumerable<PointOfInterest>> GetPointsOfInterestAsync(int cityId);
     public Task<PointOfInterest?> GetPointOfInterestAsync(int cityId, int pointOfInterestId);
+    public Task<bool> CityExistsAsync(int cityId);
+    public Task AddPointOfInterestAsync(int cityId, PointOfInterest pointOfInterest);
+    public Task<bool> SaveChangesAsync();
+    public Task AddPointOfInterestForCityAsync(int cityId, PointOfInterest pointOfInterest);
 }
