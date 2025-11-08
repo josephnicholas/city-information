@@ -1,9 +1,8 @@
-﻿namespace CityInformation.API.Entities;
-
+﻿
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Drawing;
 
+namespace CityInformation.API.Entities;
 public class PointOfInterest(string name) {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)] // New key is generated when a new city is added to the DB, generation depends on the provider
