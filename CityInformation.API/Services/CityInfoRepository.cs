@@ -1,6 +1,7 @@
 using CityInformation.API.DBContext;
 using CityInformation.API.Entities;
 using Microsoft.EntityFrameworkCore;
+using SQLitePCL;
 
 namespace CityInformation.API.Services;
 
@@ -58,5 +59,10 @@ public class CityInfoRepository(CityInfoContext dbContext) : ICityInfoRepository
     {
         var city = await GetCityAsync(cityId, false);
         city?.PointsOfInterest.Add(pointOfInterest);
+    }
+
+    public void DeletePointOfInterest(PointOfInterest pointOfInterest)
+    {
+        dbContext.PointsOfInterest.Remove(pointOfInterest);
     }
 }
