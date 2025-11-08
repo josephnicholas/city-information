@@ -8,5 +8,7 @@ public class PointOfInterestProfile : Profile
     {
         CreateMap<Entities.PointOfInterest, Models.PointOfInterestDto>();
         CreateMap<Models.PointOfInterestCreateDto, Entities.PointOfInterest>();
+        CreateMap<Models.PointOfInterestUpdateDto, Entities.PointOfInterest>();
+        CreateMap<Entities.PointOfInterest, Models.PointOfInterestUpdateDto>();
     }
 }
