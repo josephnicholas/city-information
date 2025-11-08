@@ -65,4 +65,17 @@ public class CityInfoRepository(CityInfoContext dbContext) : ICityInfoRepository
     {
         dbContext.PointsOfInterest.Remove(pointOfInterest);
     }
+
+    public async Task<IEnumerable<City>> GetCitiesByNameAsync(string? name)
+    {
+        if (string.IsNullOrEmpty(name))
+        {
+            return await GetCitiesAsync();
+        }
+
+        return await dbContext.Cities
+            .Where(c => c.Name == name.Trim())
+            .OrderBy(c => c.Name)
+            .ToArrayAsync();
+    }
 }
