@@ -13,9 +13,9 @@ using Models;
 public class CitiesController(ICityInfoRepository repository, IMapper mapper) : ControllerBase
 {
     [HttpGet] // No need to define a route since already defined at controller level
-    public async Task<ActionResult<IEnumerable<CityWithoutPointsOfInterestDto>>> GetCities([FromQuery] string? name)
+    public async Task<ActionResult<IEnumerable<CityWithoutPointsOfInterestDto>>> GetCities([FromQuery] string? name, [FromQuery] string? searchQuery)
     {
-        var cityEntities = await repository.GetCitiesByNameAsync(name);
+        var cityEntities = await repository.GetCitiesByNameAsync(name, searchQuery);
         return Ok(mapper.Map<IEnumerable<CityWithoutPointsOfInterestDto>>(cityEntities));
     }
 

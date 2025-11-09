@@ -1,7 +1,6 @@
 using CityInformation.API.DBContext;
 using CityInformation.API.Entities;
 using Microsoft.EntityFrameworkCore;
-using SQLitePCL;
 
 namespace CityInformation.API.Services;
 
@@ -66,16 +65,29 @@ public class CityInfoRepository(CityInfoContext dbContext) : ICityInfoRepository
         dbContext.PointsOfInterest.Remove(pointOfInterest);
     }
 
-    public async Task<IEnumerable<City>> GetCitiesByNameAsync(string? name)
+    public async Task<IEnumerable<City>> GetCitiesByNameAsync(string? name, string? searchQuery)
     {
-        if (string.IsNullOrEmpty(name))
+        if (string.IsNullOrEmpty(name) && string.IsNullOrWhiteSpace(searchQuery))
         {
             return await GetCitiesAsync();
         }
 
-        return await dbContext.Cities
-            .Where(c => c.Name == name.Trim())
-            .OrderBy(c => c.Name)
-            .ToArrayAsync();
+        // collection to start from
+        var citiesCollection = dbContext.Cities as IQueryable<City>; // IQueryable enables the Where, OrderBy, etc. clauses
+
+        if (!string.IsNullOrWhiteSpace(name))
+        {
+            name = name.Trim();
+            citiesCollection = citiesCollection.Where(c => c.Name == name);
+        }
+
+        if (!string.IsNullOrWhiteSpace(searchQuery))
+        {
+            searchQuery = searchQuery.Trim();
+            citiesCollection = citiesCollection.Where(c => c.Name.Contains(searchQuery)
+            || (!string.IsNullOrEmpty(c.Description) && c.Description.Contains(searchQuery)));
+        }
+
+        return await citiesCollection.OrderBy(c => c.Name).ToArrayAsync();
     }
 }
