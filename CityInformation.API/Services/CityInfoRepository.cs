@@ -65,12 +65,13 @@ public class CityInfoRepository(CityInfoContext dbContext) : ICityInfoRepository
         dbContext.PointsOfInterest.Remove(pointOfInterest);
     }
 
-    public async Task<IEnumerable<City>> GetCitiesByNameAsync(string? name, string? searchQuery)
+    public async Task<(IEnumerable<City>, PaginationMetadata)> GetCitiesByNameAsync(string? name, string? searchQuery, int pageNumber, int pageSize)
     {
-        if (string.IsNullOrEmpty(name) && string.IsNullOrWhiteSpace(searchQuery))
-        {
-            return await GetCitiesAsync();
-        }
+        // Remove this since this violate the purpose of paging
+        // if (string.IsNullOrEmpty(name) && string.IsNullOrWhiteSpace(searchQuery))
+        // {
+        //     return await GetCitiesAsync();
+        // }
 
         // collection to start from
         var citiesCollection = dbContext.Cities as IQueryable<City>; // IQueryable enables the Where, OrderBy, etc. clauses
@@ -88,6 +89,20 @@ public class CityInfoRepository(CityInfoContext dbContext) : ICityInfoRepository
             || (!string.IsNullOrEmpty(c.Description) && c.Description.Contains(searchQuery)));
         }
 
-        return await citiesCollection.OrderBy(c => c.Name).ToArrayAsync();
+        var totalItemCount = await citiesCollection.CountAsync();
+        var paginationMetadata = new PaginationMetadata(totalItemCount, pageSize, pageNumber);
+
+        var page = await citiesCollection
+            .OrderBy(c => c.Name)
+            .Skip(pageSize * (pageNumber - 1)) // skip the amount of items in the prev page
+            .Take(pageSize) // number of elements to return
+            .ToArrayAsync(); // Execution on databsae commands is done here
+
+        return (page, paginationMetadata);
     }
 }
+
+// Example page skip
+// 10 pageSize
+// 2 pageNumber
+// 10 * (2 - 1) -> number of items to skip(10)
