@@ -3,8 +3,10 @@ using CityInformation.API.Services;
 
 namespace CityInformation.API.Controllers;
 
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Models;
+using Serilog;
 
 [ApiController]
 [Route("api/cities")] // Controller level attribute, Route + URI
@@ -12,10 +14,24 @@ using Models;
 // in GetCities
 public class CitiesController(ICityInfoRepository repository, IMapper mapper) : ControllerBase
 {
+    private const int maximumPageSize = 20;
+
     [HttpGet] // No need to define a route since already defined at controller level
-    public async Task<ActionResult<IEnumerable<CityWithoutPointsOfInterestDto>>> GetCities([FromQuery] string? name, [FromQuery] string? searchQuery)
+    public async Task<ActionResult<IEnumerable<CityWithoutPointsOfInterestDto>>> GetCities(
+        [FromQuery] string? name,
+        [FromQuery] string? searchQuery,
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 10)
     {
-        var cityEntities = await repository.GetCitiesByNameAsync(name, searchQuery);
+        if (pageSize > maximumPageSize)
+        {
+            pageSize = maximumPageSize;
+        }
+
+        var (cityEntities, paginationMetadata) = await repository
+            .GetCitiesByNameAsync(name, searchQuery, pageNumber, pageSize);
+
+        Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
         return Ok(mapper.Map<IEnumerable<CityWithoutPointsOfInterestDto>>(cityEntities));
     }
 
