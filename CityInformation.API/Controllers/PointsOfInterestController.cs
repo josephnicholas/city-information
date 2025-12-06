@@ -1,10 +1,8 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace CityInformation.API.Controllers;
-
-using System.Drawing;
-using Microsoft.AspNetCore.JsonPatch;
 using Models;
 using Services;
 
@@ -63,7 +61,7 @@ public class PointsOfInterestController : Controller
     {
         if (!await _cityInfoRepository.CityExistsAsync(id))
         {
-            _logger.LogInformation($"City with id {id} wasn't found when creating points of interest.");
+            _logger.LogInformation("City with id {Id} wasn't found when creating points of interest.", id);
             return NotFound();
         }
 
@@ -76,7 +74,7 @@ public class PointsOfInterestController : Controller
         return CreatedAtRoute("GetPointOfInterest",
             new
             {
-                id = id,
+                id,
                 pointOfInterestId = mappedBackDto.Id
             }, mappedBackDto);
     }
@@ -87,7 +85,7 @@ public class PointsOfInterestController : Controller
     {
         if (!await _cityInfoRepository.CityExistsAsync(id))
         {
-            _logger.LogInformation($"City with id {id} wasn't found when creating points of interest.");
+            _logger.LogInformation("City with id {Id} wasn't found when creating points of interest.", id);
             return NotFound();
         }
 

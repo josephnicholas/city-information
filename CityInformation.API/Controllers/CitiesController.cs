@@ -14,7 +14,7 @@ using Serilog;
 // in GetCities
 public class CitiesController(ICityInfoRepository repository, IMapper mapper) : ControllerBase
 {
-    private const int maximumPageSize = 20;
+    private const int MaximumPageSize = 20;
 
     [HttpGet] // No need to define a route since already defined at controller level
     public async Task<ActionResult<IEnumerable<CityWithoutPointsOfInterestDto>>> GetCities(
@@ -23,9 +23,9 @@ public class CitiesController(ICityInfoRepository repository, IMapper mapper) : 
         [FromQuery] int pageNumber = 1,
         [FromQuery] int pageSize = 10)
     {
-        if (pageSize > maximumPageSize)
+        if (pageSize > MaximumPageSize)
         {
-            pageSize = maximumPageSize;
+            pageSize = MaximumPageSize;
         }
 
         var (cityEntities, paginationMetadata) = await repository
