@@ -88,7 +88,7 @@ namespace CityInformation.API.Controllers
             return Ok(tokenToReturn);
         }
 
-        private CityInfoUser ValidateUserCredentials(string? userName, string? password)
+        private static CityInfoUser ValidateUserCredentials(string? userName, string? password)
         {
             // We don't have a user DB or table. If you have, check the passed-through
             // username/password against what's stored in the database.

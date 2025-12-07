@@ -1,5 +1,6 @@
 using AutoMapper;
 using CityInformation.API.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CityInformation.API.Controllers;
 
@@ -9,6 +10,7 @@ using Models;
 using Serilog;
 
 [ApiController]
+[Authorize]
 [Route("api/cities")] // Controller level attribute, Route + URI
 // [controller] -> can be used which maps to the prefix "Cities"
 // in GetCities

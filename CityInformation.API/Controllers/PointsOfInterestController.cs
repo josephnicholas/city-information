@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.JsonPatch;
 
@@ -7,6 +8,7 @@ using Models;
 using Services;
 
 [Route("api/cities/{id:int}/pointsofinterest")]
+[Authorize]
 [ApiController]
 public class PointsOfInterestController : Controller
 {
