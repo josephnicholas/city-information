@@ -65,6 +65,10 @@ public class CityInfoRepository(CityInfoContext dbContext) : ICityInfoRepository
         dbContext.PointsOfInterest.Remove(pointOfInterest);
     }
 
+    public async Task<bool> CityNameMatchesCityIdAsync(string? cityName, int cityId) {
+        return await dbContext.Cities.AnyAsync(c => c.Name == cityName && c.Id == cityId);
+    }
+
     public async Task<(IEnumerable<City>, PaginationMetadata)> GetCitiesByNameAsync(string? name, string? searchQuery, int pageNumber, int pageSize)
     {
         // Remove this since this violate the purpose of paging

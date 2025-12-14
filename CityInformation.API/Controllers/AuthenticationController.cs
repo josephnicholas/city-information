@@ -60,7 +60,7 @@ namespace CityInformation.API.Controllers
             SymmetricSecurityKey? securityKey = null;
             if (secretKey is not null)
             {
-                securityKey = new SymmetricSecurityKey(Convert.FromBase64String(secretKey));
+                securityKey = new(Convert.FromBase64String(secretKey));
             }
 
             var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -96,7 +96,7 @@ namespace CityInformation.API.Controllers
             // For demo purposes, we assume credentials are valid
 
             // return a new CityInfoUser(values would normally come from your user DB/table)
-            return new CityInfoUser(1, userName ?? "", "Ethan", "Alcantara", "Dumagetme");
+            return new(1, userName ?? "", "Ethan", "Alcantara", "Dumaguete City");
         }
     }
 }

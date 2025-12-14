@@ -70,6 +70,12 @@ builder.Services.AddAuthentication("Bearer").AddJwtBearer(options =>
     };
 });
 
+builder.Services.AddAuthorizationBuilder()
+    .AddPolicy("MustBeFromDumagueteCity", policy => {
+        policy.RequireAuthenticatedUser();
+        policy.RequireClaim("city", "Dumaguete City");
+    });
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

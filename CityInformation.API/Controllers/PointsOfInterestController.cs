@@ -8,7 +8,7 @@ using Models;
 using Services;
 
 [Route("api/cities/{id:int}/pointsofinterest")]
-[Authorize]
+[Authorize(Policy = "MustBeFromDumagueteCity")]
 [ApiController]
 public class PointsOfInterestController : Controller
 {
@@ -30,9 +30,15 @@ public class PointsOfInterestController : Controller
     [HttpGet]
     public async Task<ActionResult<IEnumerable<PointOfInterestDto>>> GetPointOfInterests(int id)
     {
+        var cityName = User.Claims.FirstOrDefault(c => c.Type == "city")?.Value;
+        if (!await _cityInfoRepository.CityNameMatchesCityIdAsync(cityName, id))
+        {
+            return Forbid();
+        }
+        
         if (!await _cityInfoRepository.CityExistsAsync(id))
         {
-            _logger.LogInformation($"City with id {id} wasn't found when accessing points of interest.");
+            _logger.LogInformation("City with id {Id} wasn't found when accessing points of interest.", id);
             return NotFound();
         }
 
