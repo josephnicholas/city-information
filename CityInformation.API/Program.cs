@@ -1,3 +1,4 @@
+using Asp.Versioning;
 using CityInformation.API;
 using CityInformation.API.DBContext;
 using CityInformation.API.Services;
@@ -75,6 +76,12 @@ builder.Services.AddAuthorizationBuilder()
         policy.RequireAuthenticatedUser();
         policy.RequireClaim("city", "Dumaguete City");
     });
+
+builder.Services.AddApiVersioning(options => {
+    options.ReportApiVersions = true; // report version compatibility
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.DefaultApiVersion = new(1, 0); // is placed the response headers(api-supported-versions)
+}).AddMvc();
 
 var app = builder.Build();
 

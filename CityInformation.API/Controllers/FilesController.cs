@@ -2,21 +2,23 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace CityInformation.API.Controllers;
 
+using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 
 [Route("api/files")]
-[Authorize]
+//[Authorize]
 [ApiController]
 public class FilesController(FileExtensionContentTypeProvider fileExtensionContentTypeProvider) : ControllerBase {
     readonly FileExtensionContentTypeProvider _fileExtensionContentTypeProvider = fileExtensionContentTypeProvider 
                                                                                   ?? throw new ArgumentNullException(nameof(fileExtensionContentTypeProvider));
 
     [HttpGet("{fileId:int}")]
+    [ApiVersion(0.1, Deprecated =  true)] // can also be applied to actions, part of the api-deprecated-versions in the header
     public ActionResult Get(int fileId) {
         // Look up the actual file, depending on fileId
         // In this case let's just we are hardcoding it
-        var pathToFile = "Joseph_Nicholas_Alcantara_CV.pdf";
+        const string pathToFile = "Joseph_Nicholas_Alcantara_CV.pdf";
         if (!System.IO.File.Exists(pathToFile))
         {
             return NotFound();

@@ -5,13 +5,16 @@ using Microsoft.AspNetCore.Authorization;
 namespace CityInformation.API.Controllers;
 
 using System.Text.Json;
+using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using Serilog;
 
 [ApiController]
-[Authorize]
+// [Authorize]
 [Route("api/cities")] // Controller level attribute, Route + URI
+[ApiVersion(1)]
+[ApiVersion(2)]
 // [controller] -> can be used which maps to the prefix "Cities"
 // in GetCities
 public class CitiesController(ICityInfoRepository repository, IMapper mapper) : ControllerBase

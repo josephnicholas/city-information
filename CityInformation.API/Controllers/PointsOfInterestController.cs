@@ -4,11 +4,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.JsonPatch;
 
 namespace CityInformation.API.Controllers;
+
+using Asp.Versioning;
 using Models;
 using Services;
 
 [Route("api/cities/{id:int}/pointsofinterest")]
-[Authorize(Policy = "MustBeFromDumagueteCity")]
+// [Authorize(Policy = "MustBeFromDumagueteCity")]
+[ApiVersion(2)]
 [ApiController]
 public class PointsOfInterestController : Controller
 {
